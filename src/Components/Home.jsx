@@ -8,6 +8,7 @@ const Home = (props) => {
 
     const dashControl = () => {
         props.showHideDash();
+        // console.log("hello")
     };
 
     return (

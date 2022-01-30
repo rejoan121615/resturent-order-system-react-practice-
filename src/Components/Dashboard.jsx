@@ -1,15 +1,52 @@
-import React from "react";
-import Btn from "../Ui/Btn";
-import List from "../Components/item";
+import React, {useState} from "react";
+import OrderDetailsList from './OrderDetailsList';
+import Form from '../Components/Form';
 
 const Dashboard = (props) => {
     let totalPrice = 0;
+    const [showOrderForm, setShowOrderForm] = useState(false);
 
     if (props.orderList.length) {
         props.orderList.map((item, index) => {
             return (totalPrice += item.price);
         });
     }
+
+    const nextStep = () => {
+        setShowOrderForm(!showOrderForm);
+    };
+
+    const backBtnHandler = () => {
+        setShowOrderForm(!showOrderForm);
+    }
+    
+    const submitOrder = (data) => {
+        // create header 
+        const reqHeader = new Headers()
+        // req header / configration 
+        const reqOptions = {
+            method: "POST",
+            headers: reqHeader,
+            body: data,
+            redirect: 'follow'
+        }
+        // send data
+        fetch(
+            "https://to-do-list-c1209-default-rtdb.firebaseio.co/orders.json",
+            reqOptions
+        )
+            .then((res) => {
+                console.log("server response", res.json());
+                return res;
+            })
+            .then((res) => {
+                console.log("filtering res", res);
+            })
+            .catch((error) => {
+                console.log("got an error", error);
+            });
+    }
+
 
     return (
         <section className="bg-stone-400">
@@ -26,20 +63,9 @@ const Dashboard = (props) => {
                         total items : {props.orderList.length}
                     </h1>
                 </div>
-                {/* list items  */}
-                <div className="w-3/6">
-                    {props.orderList.map((item, index) => {
-                        console.log(item);
-                        return (
-                            <List
-                                key={index}
-                                name={item.name}
-                                dis={item.dis}
-                                price={item.price}
-                            />
-                        );
-                    })}
-                </div>
+                {/* show order details  */}
+                {!showOrderForm &&  <OrderDetailsList nextStep={nextStep} totalPrice={totalPrice} orderList={props.orderList} />}
+                {showOrderForm && <Form backBtn={backBtnHandler} submitData={{orderData: props.orderList, submit: submitOrder}} />}
             </div>
         </section>
     );

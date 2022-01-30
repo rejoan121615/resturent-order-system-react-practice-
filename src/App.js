@@ -8,7 +8,12 @@ function App() {
     const [menuItems, setMenuItems] = useState({});
     const [cartItemsList, setCartItemsList] = useState([]);
     const [showDash, setShowDash] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [formData, setFormData] = useState({
+        name: "",
+        address: "",
+        phoneNumber: "",
+        email: ""
+    })
 
     // create context
     const addCart = (item) => {
@@ -32,6 +37,7 @@ function App() {
     // show hide dash board
     const showHideDashboard = () => {
         setShowDash(!showDash);
+        // console.log("hello ")
     };
 
     return (
